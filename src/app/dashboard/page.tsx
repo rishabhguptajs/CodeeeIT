@@ -13,8 +13,7 @@ const Dashboard = () => {
 
   const getInitials = (name: string) => {
     if (!name) return "";
-    const [firstName, lastName] = name.split(" ");
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`;
+    return `${name.charAt(0)}`;
   };
 
   useEffect(() => {
