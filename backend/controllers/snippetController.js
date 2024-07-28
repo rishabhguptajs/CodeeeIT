@@ -1,4 +1,4 @@
-import Snippet from '../models/Snippet.js';
+import Snippet from '../models/snippetModel.js';
 
 const getSnippets = async (req, res) => {
     const snippets = await Snippet.find({ user: req.user._id });

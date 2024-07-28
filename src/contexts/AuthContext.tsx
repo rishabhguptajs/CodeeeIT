@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import axios from '../utils/axiosInstance';
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   user: any;
@@ -15,14 +15,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      setUser(JSON.parse(userData));
-      Router.push('/dashboard');
+    if (typeof window !== 'undefined') {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        setUser(JSON.parse(userData));
+        router.push('/dashboard');
+      }
     }
-  }, []);
+  }, [router]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -30,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
       localStorage.setItem('token', data.token);
-      Router.push('/dashboard');
+      router.push('/dashboard');
     } catch (error) {
       console.error("Error during sign-in:", error);
     }
@@ -42,7 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
       localStorage.setItem('token', data.token);
-      Router.push('/dashboard');
+      router.push('/dashboard');
     } catch (error) {
       console.error("Error during sign-up:", error);
     }
@@ -52,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    Router.push('/');
+    router.push('/');
   };
 
   return (
